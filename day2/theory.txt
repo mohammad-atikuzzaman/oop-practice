@@ -1,0 +1,118 @@
+🗓️ Day 2: Constructor Function (In-depth)
+🎯 Goal:
+
+#Constructor Function কী?
+
+#কেন দরকার?
+
+#কিভাবে কাজ করে new keyword এর সাথে।
+
+#Best practices & pitfalls.
+
+
+
+📖 Theory (Step by Step)
+
+
+
+🔹 Constructor Function কী?
+
+Constructor Function হলো একটা special function যেটা দিয়ে multiple similar object বানানো যায়।
+
+Convention: function এর নাম Capital Letter দিয়ে শুরু হয় (PascalCase)।
+
+Example:
+
+function User(name, email) {
+  this.name = name;
+  this.email = email;
+}
+
+
+
+🔹 কিভাবে কাজ করে new keyword?
+
+যখন তুমি new User("Atik", "atik@example.com") লিখবে:
+
+JS internally একটা খালি object বানাবে {}
+
+ওই object কে this এ bind করবে
+
+Function body execute করবে → property গুলো this এ assign হবে
+
+this কে return করবে
+
+
+
+
+🔹 কেন দরকার?
+
+যদি তোমাকে অনেকগুলো user বানাতে হয়, object literal দিয়ে বারবার লিখতে হবে।
+
+Constructor function দিয়ে সহজে template বানানো যায়।
+
+
+
+
+🔹 Method যোগ করার ২টা উপায়
+
+Directly inside constructor (not efficient, প্রতিটা instance নতুন function copy পাবে)
+
+Prototype এ add করা (best practice – সব instance একই function share করে)
+
+
+
+
+⚠️ Common Mistakes
+
+new ছাড়া call করা
+
+function User(name) {
+  this.name = name;
+}
+const u1 = User("Atik"); 
+console.log(u1); // undefined (কারণ return করছে না)
+console.log(globalThis.name); // "Atik" leak হয়ে গেল global scope এ ❌
+
+
+
+👉 সবসময় new দিয়ে call করতে হবে।
+
+Method ভেতরে define করা
+
+function User(name) {
+  this.name = name;
+  this.sayHi = function() { // ❌ inefficient
+    console.log(`Hi, I am ${this.name}`);
+  }
+}
+
+
+
+
+👉 প্রতিটা user আলাদা function memory নিবে।
+
+
+
+✅ Best Practice:
+
+function User(name) {
+  this.name = name;
+}
+User.prototype.sayHi = function() {
+  console.log(`Hi, I am ${this.name}`);
+};
+
+
+
+
+
+🚀 Best Practices Recap
+
+Constructor function এর নাম Capital letter দিয়ে শুরু করো।
+
+সবসময় new দিয়ে instance বানাও।
+
+Method গুলো constructor এর ভেতর না লিখে prototype এ রাখো।
+
+যদি অনেক property থাকে → object parameter ব্যবহার করো।
