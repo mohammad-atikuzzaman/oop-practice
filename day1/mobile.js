@@ -19,5 +19,22 @@ const mobile = {
 };
 
 // console.log(mobile);
-const { getInfo } = mobile;
-getInfo.call(mobile);
+
+mobile.owner = "Atik";
+// console.log(mobile);
+
+
+const {model, price}= mobile
+// console.log(price, model);
+
+
+
+// If we don't destructure the method from object we can use the method like this way
+// mobile.getInfo()
+
+
+
+// When we destructure the method from the object, we need to use .call() method with bind the object
+// const { getInfo } = mobile;
+// getInfo.call(mobile);
+
