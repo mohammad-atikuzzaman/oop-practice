@@ -20,14 +20,14 @@ const atik = new User("Atikuzzaman", "mdatikuzzaman1331@gmail.com");
 // akash.greet()
 // atik.greet()
 
-function Student(name, role) {
+function Student(name, roll) {
   this.name = name;
-  this.role = role;
+  this.roll = roll;
 }
 
 // We can return the value from 
 Student.prototype.greet = function(){
-    return `Hi, I am ${this.name}, my role is ${this.role}`
+    return `Hi, I am ${this.name}, my roll is ${this.roll}`
 }
 
 
