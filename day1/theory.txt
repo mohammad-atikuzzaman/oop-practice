@@ -1,0 +1,100 @@
+📖 Theory (Extended)
+🔹 Object কী?
+
+Object = data + behavior একসাথে রাখা যায়।
+
+property = data (value)
+
+method = behavior (function)
+
+Example (Real life analogy):
+একটা student object:
+
+Property: name, roll, age
+
+Method: read(), introduce()
+
+
+const student = {
+  name: "Rahim",
+  roll: 101,
+  age: 20,
+  introduce: function() {
+    console.log(`Hi, I am ${this.name}, roll: ${this.roll}`);
+  }
+};
+
+
+🔹 Why this?
+
+this object-এর current context বোঝায়।
+
+this.name মানে এই object-এর name property.
+
+
+
+⚠️ Common Mistakes
+❌ Mistake 1: Arrow Function in Method
+const person = {
+  name: "Atik",
+  introduce: () => {
+    console.log(`Hi, I am ${this.name}`);
+  }
+};
+
+person.introduce(); // Output: Hi, I am undefined
+
+
+👉 কেন এমন হলো?
+
+Arrow function-এর নিজের this নেই।
+
+ও parent scope থেকে this capture করে।
+
+Object literal-এর method হিসেবে arrow function দিলে, this object কে না পেয়ে global (window/undefined in strict mode) ধরে নেয়।
+
+✅ Best Practice: Object method-এ normal function ব্যবহার করো।
+
+
+
+
+
+❌ Mistake 2: Destructuring Method
+const person = {
+  name: "Atik",
+  age: 23,
+  introduce: function () {
+    console.log(`Hi, I am ${this.name}, ${this.age} years old`);
+  }
+};
+
+const { introduce } = person;
+introduce(); // Output: Hi, I am undefined, undefined years old
+
+
+👉 কেন undefined আসছে?
+
+Destructuring করলে method টা object থেকে আলাদা হয়ে যায়।
+
+ফলে তার ভেতরে this আর সেই object-এর সাথে bound থাকে না।
+
+✅ Best Practice: Method destructure করলে bind করে নিতে হবে বা call করার সময় reference দিতে হবে।
+
+const { introduce } = person;
+introduce.call(person); // Output ঠিক আসবে
+
+
+
+
+
+
+
+🚀 Best Practices Recap
+
+Method এ arrow function use কোরো না → কারণ this কাজ করবে না।
+
+Object থেকে method destructure কোরো না bind ছাড়া → নাহলে this হারাবে।
+
+Object method-এর ভেতরে সবসময় this ব্যবহার করো → যাতে property access সঠিক হয়।
+
+Object literal লেখার সময় key: value একই হলে shorthand ব্যবহার করতে পারো।
