@@ -11,4 +11,10 @@ const person = {
 person.hobby= "Codding"
 
 const {city, hobby}=person
-console.log(hobby);
+// console.log(hobby);
+
+
+
+// if we want to destructure the method from object we need to use .call()  and also we need to bind the object
+const {introduce}=person
+introduce.call(person)
