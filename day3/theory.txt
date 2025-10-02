@@ -1,0 +1,151 @@
+📖 Day 3 – OOP in JavaScript (Class, Object, Method, Static)
+1. Class & Object
+
+Class হলো blueprint বা design (যেমন একটা গাড়ির নকশা)।
+
+Object হলো ওই blueprint থেকে তৈরি বাস্তব জিনিস (যেমন নির্দিষ্ট গাড়ি)।
+
+👉 Example:
+
+class BankAccount {
+  constructor(ownerName, balance = 0) {
+    this.ownerName = ownerName;
+    this.balance = balance;
+  }
+}
+
+const akash = new BankAccount("Akash", 100);
+const rina = new BankAccount("Rina", 200);
+
+2. Constructor
+
+constructor হলো special method, object বানানোর সময় automatically call হয়।
+
+এখানে object এর initial state (property values) set করা হয়।
+
+👉 Best practice: constructor এ default values set করা উচিত, যাতে ভুল input এ error কম হয়।
+
+3. Instance Methods
+
+Class এর ভেতরে যে methods লেখা হয় → object বানালে ওই methods ওই object এর সাথে কাজ করে।
+
+এগুলোকে বলা হয় instance methods।
+
+👉 Example:
+
+deposit(amount) {
+  this.balance += amount;  // instance property update
+}
+
+
+👉 এখানে this current object কে বোঝাচ্ছে।
+
+4. this এর Behavior
+
+this সবসময় current object কে refer করে।
+
+তবে method destructure করলে this হারিয়ে যায়।
+
+এজন্য .call(), .apply(), বা .bind() দিয়ে explicitly this সেট করতে হয়।
+
+👉 Example:
+
+const { deposit } = akash;
+deposit(50); // ❌ this হারাবে
+deposit.call(akash, 50); // ✅ ঠিকমতো কাজ করবে
+
+5. State Update vs Return Value
+
+শুধু return করলে object এর ভিতরের property change হয় না।
+
+সবসময় object এর state update করতে চাইলে this.property modify করতে হবে।
+
+👉 Wrong:
+
+deposit(amount) {
+  return this.balance + amount; // শুধু হিসাব করছে
+}
+
+
+👉 Correct:
+
+deposit(amount) {
+  this.balance += amount; // state update হচ্ছে
+}
+
+6. Validation (Best Practice)
+
+সবসময় validation যোগ করতে হবে, যেমন:
+
+Negative deposit reject করা
+
+Withdraw করলে balance sufficient আছে কিনা check করা
+
+👉 Example:
+
+withdraw(amount) {
+  if (amount > this.balance) {
+    console.log("❌ Insufficient balance!");
+    return;
+  }
+  this.balance -= amount;
+}
+
+7. Static Methods
+
+Static method object এর না, class এর property।
+
+এগুলো object বানানো ছাড়াই class নাম দিয়ে access করা যায়।
+
+Use case: যখন কাজটা পুরো class এর responsibility, কোনো একক object এর না।
+
+👉 Example:
+
+static totalBalance(accounts) {
+  return accounts.reduce((sum, acc) => sum + acc.balance, 0);
+}
+
+console.log(BankAccount.totalBalance([akash, rina])); // ✅ কাজ করবে
+
+
+👉 Best Practice:
+
+Utility / Helper functions class এর মধ্যে রাখার জন্য static ব্যবহার করো।
+
+কখনো object-specific কাজ static এ কোরো না।
+
+8. Memory Efficiency
+
+Instance methods → প্রতিটি object এর সাথে copy হয়ে যায়।
+
+Static methods → একবারই থাকে, class এর সাথে।
+
+এজন্য unnecessary method instance এ রাখা উচিত নয়।
+
+9. Summary – Day 3 Learning
+
+Class = blueprint
+
+Object = বাস্তব instance
+
+Constructor = initial setup
+
+Instance Method = object-specific কাজ
+
+Static Method = class-level কাজ (no this)
+
+this → object কে refer করে, তবে destructure করলে call/apply/bind দরকার
+
+Best Practice → state update করো, validation যোগ করো, static শুধু class responsibility এর জন্য ব্যবহার করো
+
+🎯 Day 3 Practice Idea
+
+BankAccount এর multiple accounts বানাও।
+
+Withdraw / deposit এ validation implement করো।
+
+Static method দিয়ে সব account এর মোট balance বের করো।
+
+Destructuring করলে call/apply/bind দিয়ে handle করো।
+
+👉 এই theory টা তুমি বারবার পড়লে OOP এর base concept clear হয়ে যাবে।
