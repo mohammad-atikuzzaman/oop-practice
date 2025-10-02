@@ -15,10 +15,10 @@ class Child extends Parent {
   greet() {
     return `Hi, I am ${this.name}, I am ${this.age} years old. From Child`;
   }
+  greeBoth() {
+   return [super.greet() , this.greet()]
+  }
 }
 
-// const p1= new Parent("Akash")
-// console.log(p1.greet());
-
-const atik = new Child("Atik", 24)
-console.log(atik.greet());
+const atik = new Child("Atik", 24);
+// console.log(atik.greeBoth()[0]);
