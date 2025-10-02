@@ -12,4 +12,6 @@ class BankAccount {
   }
 }
 
-const akashsAccount = new BankAccount("Akash")
+const akashsAccount = new BankAccount("Akash", 80)
+console.log(akashsAccount.deposit(20));
+console.log(akashsAccount.withdraw(50));
