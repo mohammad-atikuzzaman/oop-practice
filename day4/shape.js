@@ -38,4 +38,5 @@ class Rectangle extends Shape {
 
 const r1 = new Rectangle ("Blue", "3" , 5)
 console.log(r1);
+console.log(r1.describe());
 console.log(r1.area());
