@@ -1,0 +1,161 @@
+📖 Day 4: Inheritance & Composition in JavaScript OOP
+🔹 1. Inheritance (উত্তরাধিকার)
+
+Inheritance হলো OOP এর একটা শক্তিশালী ধারণা যেখানে একটি ক্লাস (Child) আরেকটি ক্লাস (Parent) এর property ও method উত্তরাধিকার সূত্রে পায়।
+
+👉 সহজভাবে:
+
+যদি বলা যায় → “Dog is an Animal” → এখানে Inheritance হবে।
+
+Child Class parent এর behavior override করতে পারে বা নতুন behavior যোগ করতে পারে।
+
+Example:
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  sound() {
+    return `${this.name} makes a sound`;
+  }
+}
+
+class Dog extends Animal {
+  sound() {
+    return `${this.name} barks: Woof!`;
+  }
+}
+
+const dog = new Dog("Tommy");
+console.log(dog.sound()); // Tommy barks: Woof!
+
+
+✅ এখানে Dog হলো Animal এর বিশেষ রূপ।
+
+🔹 2. super Keyword
+
+super() ব্যবহার করা হয় →
+
+Parent এর constructor কল করতে।
+
+Parent এর method access করতে।
+
+class Parent {
+  greet() {
+    return "Hello from Parent";
+  }
+}
+
+class Child extends Parent {
+  greet() {
+    return super.greet() + " and Hello from Child";
+  }
+}
+
+const child = new Child();
+console.log(child.greet());
+// Hello from Parent and Hello from Child
+
+🔹 3. Composition (has-a relationship)
+
+Inheritance এর পাশাপাশি OOP এ Composition ও খুব গুরুত্বপূর্ণ।
+এখানে একটি class এর মধ্যে অন্য class object হিসেবে থাকে।
+
+👉 সহজভাবে:
+
+যদি বলা যায় → “Car has an Engine” → এটা Composition।
+
+Example:
+class Engine {
+  start() {
+    return "Engine started!";
+  }
+}
+
+class Car {
+  constructor(brand) {
+    this.brand = brand;
+    this.engine = new Engine(); // has-a relationship
+  }
+  drive() {
+    return `${this.brand} is driving. ${this.engine.start()}`;
+  }
+}
+
+const car = new Car("BMW");
+console.log(car.drive());
+// BMW is driving. Engine started!
+
+🔹 4. Inheritance বনাম Composition
+বিষয়	Inheritance (is-a)	Composition (has-a)
+সম্পর্ক	Child is a Parent	One class has a another class
+Example	Dog is an Animal	Car has an Engine
+Reuse	Parent এর সব method পাবে	অন্য object কে inject করে ব্যবহার করতে হবে
+Flexibility	কম (একটা মাত্র parent extend করা যায়)	বেশি (multiple objects use করা যায়)
+কখন ব্যবহার	Child সত্যিই Parent এর বিশেষ ধরন হলে	Child শুধু অন্য class এর feature ব্যবহার করলে
+🔹 5. Benefits of Inheritance
+
+Code Reusability → একবার লেখা কোড বারবার ব্যবহার করা যায়।
+
+Extensibility → নতুন feature সহজে যোগ করা যায়।
+
+Maintainability → bug fix করলে সব child এ কাজ করে।
+
+🔹 6. Problems of Overusing Inheritance
+
+খুব বেশি inheritance ব্যবহার করলে কোড জটিল হয়ে যায়।
+
+সবসময় parent-child সম্পর্ক থাকে না, অনেক সময় composition বেশি natural হয়।
+
+তাই rule of thumb:
+
+যদি X is a Y → Inheritance
+
+যদি X has a Y → Composition
+
+🎯 Final Example (Mix of Inheritance + Composition)
+// Inheritance
+class Character {
+  constructor(name, health) {
+    this.name = name;
+    this.health = health;
+  }
+}
+
+class Warrior extends Character {
+  attack() {
+    return `${this.name} slashes with a sword!`;
+  }
+}
+
+// Composition
+class Sword {
+  use() {
+    return "slashes with a sword!";
+  }
+}
+
+class Fighter {
+  constructor(name, weapon) {
+    this.name = name;
+    this.weapon = weapon;
+  }
+  attack() {
+    return `${this.name} ${this.weapon.use()}`;
+  }
+}
+
+const warrior = new Warrior("Aragorn", 100);
+console.log(warrior.attack()); // Inheritance
+
+const fighter = new Fighter("Leonidas", new Sword());
+console.log(fighter.attack()); // Composition
+
+📌 সারাংশ
+
+Inheritance ব্যবহার করো যখন child সত্যিই parent এর বিশেষ ধরন।
+
+Composition ব্যবহার করো যখন child শুধু অন্য class এর feature ব্যবহার করে।
+
+Inheritance = is-a relationship
+
+Composition = has-a relationship
