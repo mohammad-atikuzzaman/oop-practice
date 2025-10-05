@@ -1,11 +1,12 @@
 //1. Object Relationship –
+
+// Association – “uses” relationship
+
 /**
  * একটা class অন্য class-কে শুধু use করে, কিন্তু depend করে না।
  * একটা class অনেক সময় অন্য class-এর object ব্যবহার করে —
  * এই সম্পর্কই বলে association।
  */
-
-// Association – “uses” relationship
 
 class Driver {
   drive(car) {
@@ -72,7 +73,7 @@ class Truck {
   }
   startTruck() {
     // return [this.engine.start(), this.radio.play()];
-    return new Start(this.engine, this.radio)
+    return new Start(this.engine, this.radio);
   }
 }
 
@@ -81,4 +82,39 @@ const radio = new Radio("Sony", 10);
 
 const truck = new Truck("Volvo", "Tn55df", engine, radio);
 
-console.log(truck.startTruck());
+// console.log(truck);
+// console.log(truck.startTruck());
+
+// _______________________________________________________________________________________________
+
+// Composition – “owns-a” relationship
+
+/**
+ * Composition হলো stronger relationship —
+ * একটা object তৈরি হলে অন্য object তার ভিতরে তৈরি হয়,
+ * এবং parent destroy হলে child ও destroy হয়।
+ */
+
+class BikeEngine {
+  start() {
+    return `Car Engine is started`;
+  }
+}
+
+class Bike {
+  constructor(brand, model) {
+    this.brand = brand;
+    this.model = model;
+    this.engine = new BikeEngine();
+  }
+  startBike() {
+    return {
+      isStarted: this.engine.start(),
+      isMoving: `${this.brand} $${this.model} is running so fast!`,
+    };
+  }
+}
+
+const bike1 = new Bike("Yamaha", "R 15")
+console.log(bike1);
+console.log(bike1.startBike());
