@@ -1,0 +1,210 @@
+🌟 Day 5 – Object Oriented Programming (OOP) in JavaScript
+🧩 1. What is OOP?
+
+OOP (Object Oriented Programming) হলো programming-এর একটা powerful system, যেখানে code-কে “object” আকারে ভাগ করা হয়।
+প্রতিটা object-এর নিজস্ব data (properties) এবং behavior (methods) থাকে।
+
+👉 Example:
+
+const car = {
+  brand: "Toyota",
+  color: "Black",
+  start() {
+    console.log(`${this.brand} is starting...`);
+  }
+};
+
+car.start(); // Toyota is starting...
+
+
+এই car object-এর মধ্যে data (brand, color) এবং behavior (start method) — দুইটাই আছে।
+এটাই হলো object-oriented thinking।
+
+🧱 2. Why OOP? (কেন ব্যবহার করা হয়)
+
+OOP ব্যবহার করার মূল ৪টা কারণ হলো 👇
+
+Code Reusability – একই code বারবার না লিখে পুনরায় ব্যবহার করা যায়
+
+Easy Maintenance – বড় project সহজে manage করা যায়
+
+Scalability – নতুন feature সহজে যোগ করা যায়
+
+Clean Structure – প্রতিটি অংশের আলাদা responsibility থাকে
+
+🧠 3. Four Pillars of OOP
+
+এখন আসল ম্যাজিক ✨
+OOP-এর ভিত্তি তৈরি হয় চারটি মূল ধারণার ওপর:
+
+🏗️ (a) Encapsulation – Data protection
+
+Encapsulation মানে হলো data এবং behavior কে একসাথে একটা unit-এর মধ্যে রাখা,
+এবং বাইরের কেউ যাতে direct সেই data পরিবর্তন করতে না পারে।
+
+👉 Example:
+
+class BankAccount {
+  #balance = 0; // private property
+
+  deposit(amount) {
+    this.#balance += amount;
+  }
+
+  getBalance() {
+    return this.#balance;
+  }
+}
+
+const acc = new BankAccount();
+acc.deposit(500);
+console.log(acc.getBalance()); // 500
+console.log(acc.#balance); // ❌ Error (private)
+
+
+🔒 এখানে #balance property বাইরে থেকে access করা যায় না।
+এটাই হলো Encapsulation — data কে protect করা।
+
+🧬 (b) Inheritance – Reuse Code Easily
+
+Inheritance মানে, একটা class আরেকটা class-এর property ও method use করতে পারবে।
+এটা code reuse করতে সাহায্য করে।
+
+👉 Example:
+
+class Animal {
+  eat() {
+    console.log("Eating...");
+  }
+}
+
+class Dog extends Animal {
+  bark() {
+    console.log("Barking...");
+  }
+}
+
+const dog = new Dog();
+dog.eat(); // Eating...
+dog.bark(); // Barking...
+
+
+🐶 এখানে Dog class, Animal থেকে property/method inherit করেছে।
+
+🎭 (c) Polymorphism – One Method, Many Forms
+
+Polymorphism মানে হলো একই method নাম ভিন্ন ভিন্ন object অনুযায়ী আলাদা কাজ করবে।
+
+👉 Example:
+
+class Animal {
+  sound() {
+    console.log("Animal sound");
+  }
+}
+
+class Dog extends Animal {
+  sound() {
+    console.log("Woof!");
+  }
+}
+
+class Cat extends Animal {
+  sound() {
+    console.log("Meow!");
+  }
+}
+
+const animals = [new Dog(), new Cat()];
+animals.forEach(a => a.sound());
+
+
+Output:
+
+Woof!
+Meow!
+
+
+🐾 সবাই sound() method use করছে, কিন্তু behavior আলাদা।
+এটাই Polymorphism।
+
+🕶️ (d) Abstraction – Hide Details, Show Essentials
+
+Abstraction মানে হলো unnecessary details লুকিয়ে শুধু প্রয়োজনীয়টা দেখানো।
+
+👉 Example:
+
+class Payment {
+  process() {
+    throw new Error("Method must be implemented by subclass");
+  }
+}
+
+class CardPayment extends Payment {
+  process() {
+    console.log("Processing card payment...");
+  }
+}
+
+new CardPayment().process();
+
+
+এখানে Payment হলো abstract idea,
+আর CardPayment বাস্তবে কাজ করে —
+অর্থাৎ, আমরা concept রাখছি abstract, কিন্তু implementation আলাদা class-এ করছি।
+
+🧰 4. OOP Structure Summary
+
+একটা সাধারণ OOP structure এর মতো দেখতে হয় 👇
+
+class Parent {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+class Child extends Parent {
+  constructor(name, age) {
+    super(name);
+    this.age = age;
+  }
+
+  greet() {
+    console.log(`Hi, I am ${this.name}, ${this.age} years old.`);
+  }
+}
+
+const person = new Child("Atik", 23);
+person.greet();
+
+🧑‍💻 5. Real Life Example
+
+ধরা যাক তুমি একটা Payment System বানাচ্ছো।
+
+তুমি চাইছো Cash, Card, Mobile Payment — তিন ধরনের payment থাকবে।
+সবগুলোর common behavior হলো “processPayment()”,
+কিন্তু কাজ করবে ভিন্নভাবে।
+
+👉 এইটা OOP দিয়েই সুন্দরভাবে করা যায় — যেমনটা আমরা উপরে project-এ দেখেছি।
+
+🧩 6. Benefits of Learning OOP
+
+✅ Clean and modular code structure
+✅ Reusable and scalable system
+✅ Makes teamwork easier
+✅ Easy debugging and testing
+✅ Professional project structure
+
+🧭 7. Final Example Recap
+
+👉 Payment – Abstract class
+👉 CardPayment, CashPayment, MobileBankingPayment – Subclasses
+👉 প্রতিটা subclass নিজের মতো করে processPayment() implement করে
+👉 OOP-এর চারটা pillar – encapsulation, inheritance, polymorphism, abstraction – একসাথে দেখা যায়!
+
+🎯 In Short:
+Pillar	                     Meaning	                                     Example
+Encapsulation        	Data protection	                    Private variable #balance
+Inheritance	             Code reuse	                   class Dog extends Animal
+Polymorphism     	Same method, different behavior	         sound() in Dog & Cat
+Abstraction         	Hide details             	Payment class idea only
