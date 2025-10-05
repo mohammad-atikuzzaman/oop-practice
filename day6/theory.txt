@@ -1,0 +1,241 @@
+🧠 Day 6 – Relationship Between Classes (in OOP)
+
+OOP-এর মধ্যে ক্লাসগুলোর মধ্যে সম্পর্ক (relationship) তৈরি করা সবচেয়ে জরুরি বিষয়গুলোর একটি।
+কারণ বড় প্রজেক্টে এক ক্লাস অন্য ক্লাসের সাথে connect করে কাজ করে।
+
+🔹 Types of Relationships
+1️⃣ Inheritance → (Is-A Relationship)
+
+যখন একটা class অন্য একটা class থেকে property বা method inherit (উত্তরাধিকার) করে।
+
+👉 Example:
+“Dog is a Animal” → Dog class inherits Animal class
+
+class Animal {
+  eat() {
+    console.log("Eating...");
+  }
+}
+
+class Dog extends Animal {
+  bark() {
+    console.log("Woof! Woof!");
+  }
+}
+
+const dog = new Dog();
+dog.eat(); // from Animal
+dog.bark(); // from Dog
+
+
+✅ যখন ব্যবহার করবে:
+
+যখন দুই ক্লাসের মধ্যে “is-a” relationship থাকে
+যেমন:
+Car is a Vehicle,
+Teacher is a Person
+
+🚫 যখন ব্যবহার করবে না:
+
+যখন এক ক্লাস অন্যটার behavior থেকে একদম আলাদা
+(e.g. Driver এবং Car — এখানে driver গাড়ির “owner” না, বরং “uses” it)
+
+2️⃣ Composition (Has-A Relationship)
+
+Composition মানে — একটা class-এর মধ্যে অন্য class-এর instance থাকা।
+
+👉 উদাহরণ:
+“Car has an Engine” → Car class-এর মধ্যে Engine class-এর instance থাকবে।
+
+class Engine {
+  start() {
+    console.log("Engine started...");
+  }
+}
+
+class Car {
+  constructor(model) {
+    this.model = model;
+    this.engine = new Engine(); // composition
+  }
+
+  drive() {
+    this.engine.start();
+    console.log(`${this.model} is driving...`);
+  }
+}
+
+const car = new Car("BMW");
+car.drive();
+
+
+✅ যখন ব্যবহার করবে:
+
+যখন এক ক্লাস অন্য ক্লাসের property বা method ব্যবহার করতে চায়
+
+যখন দুই ক্লাস স্বাধীনভাবে exist করতে পারে
+
+🧠 Best Practice:
+Composition ব্যবহার inheritance এর চেয়ে অনেক বেশি flexible।
+Inheritance tightly coupled করে দেয় (এক ক্লাস change করলে অন্যটায় problem হয়)।
+
+3️⃣ Aggregation (Has-A Relationship but weaker)
+
+Aggregation হলো composition এর একটা light version।
+এখানে ক্লাসগুলো loosely connected থাকে।
+
+👉 Example:
+“Library has Books”
+Library delete হয়ে গেলে বইগুলো থাকবে।
+
+class Book {
+  constructor(title) {
+    this.title = title;
+  }
+}
+
+class Library {
+  constructor(name) {
+    this.name = name;
+    this.books = [];
+  }
+
+  addBook(book) {
+    this.books.push(book);
+  }
+
+  listBooks() {
+    this.books.forEach(b => console.log(b.title));
+  }
+}
+
+const book1 = new Book("JavaScript Basics");
+const book2 = new Book("OOP Mastery");
+
+const library = new Library("City Library");
+library.addBook(book1);
+library.addBook(book2);
+
+library.listBooks();
+
+
+✅ যখন ব্যবহার করবে:
+
+যখন object relationship আছে, কিন্তু dependency strong না
+
+অর্থাৎ parent class delete হলেও child class survive করতে পারবে
+
+4️⃣ Association (Uses Relationship)
+
+Association হলো সাধারণ “uses” relationship —
+একটা ক্লাস অন্যটার সাথে কাজ করে, কিন্তু কোনো ownership নেই।
+
+👉 Example:
+“Teacher uses Whiteboard”
+
+class Whiteboard {
+  write(msg) {
+    console.log("Writing:", msg);
+  }
+}
+
+class Teacher {
+  constructor(name) {
+    this.name = name;
+  }
+
+  teach(board) {
+    board.write(`${this.name} is teaching`);
+  }
+}
+
+const t1 = new Teacher("Mr. Akash");
+const board = new Whiteboard();
+t1.teach(board);
+
+
+✅ যখন ব্যবহার করবে:
+
+যখন এক ক্লাস অন্যটার সাথে temporary কাজ করে
+
+Dependency কম থাকে
+
+এক ক্লাস অন্যটার instance maintain করে না
+
+🔸 Quick Comparison Table
+Relationship	Example	Type	Dependency
+Inheritance	Dog → Animal	Is-A	Strong
+Composition	Car → Engine	Has-A	Strong
+Aggregation	Library → Books	Has-A	Weak
+Association	Teacher → Whiteboard	Uses	Temporary
+⚙️ When to Use What
+Situation	Use
+যখন ক্লাসগুলো একই nature-এর	Inheritance
+যখন একটা ক্লাস অন্যটার উপর strongly depend করে	Composition
+যখন loosely dependent relationship দরকার	Aggregation
+যখন শুধু temporary usage দরকার	Association
+💡 Best Practices
+
+✅ Inheritance শুধুমাত্র তখনই ব্যবহার করো, যখন সত্যিকারের is-a relationship থাকে
+✅ Composition বেশি ব্যবহার করো — এটা flexible এবং maintainable
+✅ এক ক্লাসে একাধিক responsibility দিও না (Single Responsibility Principle)
+✅ Public property কম রাখো
+✅ Dependency minimize করো
+✅ Constructor এর মধ্যে অন্য class এর object create না করে parameter আকারে pass করা ভালো (Dependency Injection pattern)
+
+🔧 Practice Exercises
+
+1️⃣ Inheritance Practice:
+
+একটা Employee class বানাও
+
+একটা Manager class বানাও যেটা Employee থেকে extend করবে
+
+Manager এর extra property: department
+
+method: assignTask()
+
+2️⃣ Composition Practice:
+
+একটা Battery class বানাও
+
+একটা Phone class বানাও যার মধ্যে Battery থাকবে
+
+যখন Phone.powerOn() কল করা হবে, তখন battery charge check করবে
+
+3️⃣ Aggregation Practice:
+
+একটা Course class বানাও
+
+একটা Student class বানাও
+
+Course এর মধ্যে multiple students add করা যাবে
+
+4️⃣ Association Practice:
+
+একটা Doctor class বানাও
+
+একটা Patient class বানাও
+
+Doctor.treat(patient) method কল করলে দেখাবে Doctor treating patient.name
+
+🏠 Homework (Realistic Scenario)
+
+🔹 Problem:
+একটা Hospital Management System বানাও নিচের relationship দিয়ে —
+
+Hospital → has many Departments (Aggregation)
+
+Department → has many Doctors (Aggregation)
+
+Doctor → uses Patient (Association)
+
+Doctor → is a Person (Inheritance)
+
+🎯 Goal:
+
+সব relationship সঠিকভাবে implement করবে
+
+Doctor class-এ একটি method থাকবে treat(patient)
+
+Hospital class-এ method থাকবে addDepartment() এবং listDepartments()

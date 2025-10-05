@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School Management System</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f4f4f4;
+      padding: 40px;
+      color: #222;
+    }
+    h1 {
+      color: #4b0082;
+      text-align: center;
+    }
+    .container {
+      max-width: 700px;
+      background: white;
+      margin: 20px auto;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    button {
+      background: #4b0082;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #36015f;
+    }
+    .list {
+      margin-top: 15px;
+      padding: 10px;
+      background: #fafafa;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🏫 School Management System</h1>
+
+  <div class="container">
+    <h3>Add Teacher</h3>
+    <input type="text" id="teacherName" placeholder="Teacher Name" />
+    <input type="text" id="teacherSubject" placeholder="Subject" />
+    <button id="addTeacherBtn">Add Teacher</button>
+
+    <h3>Add Student</h3>
+    <input type="text" id="studentName" placeholder="Student Name" />
+    <input type="text" id="studentGrade" placeholder="Grade" />
+    <button id="addStudentBtn">Add Student</button>
+
+    <h3>Actions</h3>
+    <button id="showDetailsBtn">Show School Details</button>
+    <button id="announceBtn">Principal Announcement</button>
+
+    <div class="list" id="output"></div>
+  </div>
+
+  <script>
+    // ==============================
+    // OOP CLASSES
+    // ==============================
+
+    class Principal {
+      constructor(name) {
+        this.name = name;
+      }
+
+      announce(message) {
+        return `📢 Principal ${this.name} announced: "${message}"`;
+      }
+
+      meeting(teachers, students) {
+        return `👨‍🏫 Principal ${this.name} is calling a meeting with ${teachers.length} teachers and ${students.length} students.`;
+      }
+    }
+
+    class Teacher {
+      constructor(name, subject) {
+        this.name = name;
+        this.subject = subject;
+      }
+
+      teach() {
+        return `${this.name} is teaching ${this.subject}.`;
+      }
+    }
+
+    class Student {
+      constructor(name, grade) {
+        this.name = name;
+        this.grade = grade;
+      }
+
+      study() {
+        return `${this.name} is studying for grade ${this.grade}.`;
+      }
+    }
+
+    class School {
+      constructor(name, principalName) {
+        this.name = name;
+        this.principal = new Principal(principalName); // Composition
+        this.teachers = []; // Aggregation
+        this.students = []; // Aggregation
+      }
+
+      addTeacher(teacher) {
+        this.teachers.push(teacher);
+      }
+
+      addStudent(student) {
+        this.students.push(student);
+      }
+
+      showDetails() {
+        return `
+          🏫 School: ${this.name}<br>
+          Principal: ${this.principal.name}<br>
+          Teachers: ${this.teachers.map(t => t.name).join(", ") || "None"}<br>
+          Students: ${this.students.map(s => s.name).join(", ") || "None"}<br>
+        `;
+      }
+    }
+
+    // ==============================
+    // APP LOGIC
+    // ==============================
+
+    const school = new School("Green Valley School", "Mr. Rahman");
+    const output = document.getElementById("output");
+
+    // Add Teacher
+    document.getElementById("addTeacherBtn").addEventListener("click", () => {
+      const name = document.getElementById("teacherName").value.trim();
+      const subject = document.getElementById("teacherSubject").value.trim();
+
+      if (!name || !subject) {
+        output.innerHTML = "⚠️ Please enter both name and subject!";
+        return;
+      }
+
+      const teacher = new Teacher(name, subject);
+      school.addTeacher(teacher);
+      output.innerHTML = `✅ Teacher ${name} added successfully!`;
+      document.getElementById("teacherName").value = "";
+      document.getElementById("teacherSubject").value = "";
+    });
+
+    // Add Student
+    document.getElementById("addStudentBtn").addEventListener("click", () => {
+      const name = document.getElementById("studentName").value.trim();
+      const grade = document.getElementById("studentGrade").value.trim();
+
+      if (!name || !grade) {
+        output.innerHTML = "⚠️ Please enter both name and grade!";
+        return;
+      }
+
+      const student = new Student(name, grade);
+      school.addStudent(student);
+      output.innerHTML = `🎓 Student ${name} added successfully!`;
+      document.getElementById("studentName").value = "";
+      document.getElementById("studentGrade").value = "";
+    });
+
+    // Show School Details
+    document.getElementById("showDetailsBtn").addEventListener("click", () => {
+      output.innerHTML = school.showDetails();
+    });
+
+    // Announcement
+    document.getElementById("announceBtn").addEventListener("click", () => {
+      const message = prompt("Enter announcement message:");
+      if (!message) return;
+      output.innerHTML = school.principal.announce(message);
+    });
+  </script>
+</body>
+</html>
