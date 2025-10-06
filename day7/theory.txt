@@ -1,0 +1,285 @@
+🧠 Day 7 — Encapsulation (Data Protection in OOP)
+🔹 What Exactly Is Encapsulation?
+
+Encapsulation মানে হলো —
+
+Data (properties) এবং behavior (methods) কে একসাথে একটা “capsule”-এর মধ্যে রাখা, যাতে বাইরে থেকে direct access করা না যায়।
+
+তুমি real life-এ ভাবো —
+তুমি ব্যাংকে টাকা রাখো।
+তুমি চাইলে vault খুলে নিজের হাতে টাকা নিতে পারো না; বরং তুমি teller বা ATM এর মাধ্যমে নির্দিষ্ট process follow করে withdraw করতে পারো।
+
+এই system টাই হচ্ছে Encapsulation — data secure, controlled, predictable.
+
+🔹 In JavaScript Terms
+
+Encapsulation achieved হয় যখন তুমি:
+
+Private variables ব্যবহার করো
+
+Getter/Setter দিয়ে controlled access দাও
+
+Validation/Rules enforce করো method এর মাধ্যমে
+
+🔹 Why Do We Need Encapsulation?
+
+🔸 1. Data Security:
+Sensitive data (যেমন password, balance) কেউ direct modify করতে না পারে।
+
+🔸 2. Validation:
+তুমি চাইলে invalid data prevent করতে পারো setter বা method দিয়ে।
+
+🔸 3. Maintainability:
+তুমি class-এর internal structure change করলে outside code ভাঙবে না।
+
+🔸 4. Code Consistency:
+সব access এক জায়গা থেকে control হয়।
+
+🔸 5. Real-world Modeling:
+Object behaves like a real-world entity (e.g., ATM, User, Vehicle etc.)
+
+🔹 Problem Without Encapsulation
+class Account {
+  constructor(owner, balance) {
+    this.owner = owner;
+    this.balance = balance;
+  }
+}
+
+const a1 = new Account("Atik", 500);
+a1.balance = -9999999; // ❌ Anyone can modify balance!
+console.log(a1.balance); // Broken logic!
+
+
+😣 এমন হলে তোমার পুরো banking system collapse করে যাবে!
+কারণ data exposed.
+
+🔹 Solution: Encapsulation Using Private Fields
+🔸 Step 1: Declare Private Variable
+
+JavaScript-এ private field declare করতে # ব্যবহার হয়।
+
+class Account {
+  #balance; // private
+
+  constructor(owner, balance) {
+    this.owner = owner;
+    this.#balance = balance;
+  }
+}
+
+🔸 Step 2: Create Public Methods for Controlled Access
+class Account {
+  #balance;
+
+  constructor(owner, balance) {
+    this.owner = owner;
+    this.#balance = balance;
+  }
+
+  deposit(amount) {
+    if (amount > 0) {
+      this.#balance += amount;
+      console.log(`Deposited ${amount}.`);
+    } else {
+      console.log("Invalid deposit amount!");
+    }
+  }
+
+  withdraw(amount) {
+    if (amount <= this.#balance) {
+      this.#balance -= amount;
+      console.log(`Withdrawn ${amount}.`);
+    } else {
+      console.log("Insufficient balance!");
+    }
+  }
+
+  getBalance() {
+    return this.#balance;
+  }
+}
+
+const user = new Account("Atik", 1000);
+user.deposit(500);
+user.withdraw(2000);
+console.log(user.getBalance());
+
+
+👉 এখন user.#balance direct access করা যাবে না — শুধুমাত্র getBalance() দিয়েই দেখা যাবে।
+
+🔹 Getter & Setter: Another Way to Control Access
+
+Getter এবং Setter property-এর মতো behave করে, কিন্তু ভিতরে method চলে।
+
+Example:
+class Student {
+  #mark;
+
+  set mark(value) {
+    if (value >= 0 && value <= 100) {
+      this.#mark = value;
+    } else {
+      console.log("Invalid mark!");
+    }
+  }
+
+  get mark() {
+    return this.#mark;
+  }
+}
+
+const s1 = new Student();
+s1.mark = 95; // calls setter
+console.log(s1.mark); // calls getter
+
+
+👉 এখানে s1.mark দেখলে মনে হয় property, কিন্তু ভিতরে method call হচ্ছে।
+এটাই getter/setter এর beauty — clean, readable, safe.
+
+🔹 Encapsulation in Real Project Context
+
+ধরা যাক তুমি একটা “User Management System” বানাচ্ছো।
+User-এর password protected রাখতে হবে।
+
+class User {
+  #password;
+
+  constructor(username, password) {
+    this.username = username;
+    this.#password = password;
+  }
+
+  login(inputPass) {
+    if (inputPass === this.#password) {
+      console.log(`${this.username} logged in successfully!`);
+    } else {
+      console.log("Incorrect password!");
+    }
+  }
+
+  changePassword(oldPass, newPass) {
+    if (oldPass === this.#password) {
+      this.#password = newPass;
+      console.log("Password updated!");
+    } else {
+      console.log("Old password doesn't match!");
+    }
+  }
+}
+
+const atik = new User("Atik", "12345");
+atik.login("wrong");
+atik.login("12345");
+atik.changePassword("12345", "abcd");
+atik.login("abcd");
+
+
+🔐 Result: Password পুরোপুরি private!
+তুমি বাইরে থেকে modify বা access করতে পারবে না।
+
+🔹 How Encapsulation Works Internally
+
+যখন তুমি private field # ব্যবহার করো:
+
+JavaScript class এর “internal slot”-এ variable store করে।
+
+বাইরে থেকে object.#field call করলে error দেয়।
+
+শুধুমাত্র class-এর ভিতরেই access করা যায়।
+
+🔹 Difference Between Encapsulation and Abstraction
+Concept	What it does	Example
+Encapsulation	Data hide করে	Private fields (#balance)
+Abstraction	Implementation hide করে	Simple interface (ATM withdraw button)
+
+👉 Encapsulation focuses on how data is stored securely
+👉 Abstraction focuses on how data is presented simply
+
+🔹 Common Mistakes (Avoid These!)
+
+🚫 Private field ছাড়া property expose করা
+🚫 Method ছাড়া direct manipulation
+🚫 Setter এর ভিতরে validation না দেওয়া
+🚫 Sensitive info console.log() করা
+🚫 Getter/setter এর ভিতরে complex logic লেখা
+
+✅ সবসময় মনে রাখবে — encapsulation মানে “control”, “protection”, “predictability”।
+
+🔹 Best Practices
+
+✅ Use #privateFields for sensitive data
+✅ Always validate inside setter or methods
+✅ Provide only necessary access
+✅ Avoid exposing unnecessary properties
+✅ Follow Single Responsibility Principle (একটা class এক কাজ করবে)
+✅ Use meaningful names like getBalance(), setPassword()
+
+⚙️ Practice Exercises
+
+1️⃣ Account Class
+
+Private: #balance
+
+Methods: deposit(amount), withdraw(amount), getBalance()
+
+Rule: balance কখনো negative হবে না
+
+2️⃣ Student Class
+
+Private: #marks
+
+Methods: addMark(mark), getAverage()
+
+Validate: mark 0–100 এর মধ্যে
+
+3️⃣ Temperature Class
+
+Private: #celsius
+
+Getter for fahrenheit
+
+Setter for fahrenheit
+
+Formula: F = C×9/5 + 32, C = (F−32)×5/9
+
+🏠 Homework (Real-World Scenario)
+🎯 Build: Encapsulated Banking App
+
+Requirements:
+
+Class BankAccount
+
+Private: #balance
+
+Methods: deposit(amount), withdraw(amount), getBalance()
+
+Class User
+
+Properties: name, accounts (array)
+
+Method: addAccount(account), showAccounts()
+
+Validate:
+
+Deposit only positive
+
+Withdraw cannot exceed balance
+
+Add one extra method: transfer(toAccount, amount) to send money between accounts.
+
+👉 Try to make it secure, clean, and realistic.
+
+🔹 Summary Table
+Concept	Description	Example
+Encapsulation	Data hide করে method দিয়ে access দেয়	#balance, getBalance()
+Getter	Property-like read method	get balance()
+Setter	Property-like write method	set balance(val)
+Private Field	# দিয়ে declare করা variable	#password
+Goal	Security, Validation, Maintainability	All above
+💬 Simple Analogy
+
+💡 “Encapsulation is like a capsule.”
+Medicine (data) capsule এর ভিতরে থাকে, তুমি direct powder খেতে পারো না —
+তুমি capsule swallow করো, ভিতরের কাজ সেটা নিজে করে নেয়।
+JavaScript class ও একই কাজ করে: data কে protect করে, আর method দিয়ে safe way তে কাজ করায়।
