@@ -16,7 +16,7 @@ class App {
     if (!user) {
       return "Invalid Credentials";
     }
-    if ((email, password, user)) {
+    if (email && password && user) {
       if (user.privetInfo !== password) {
         return "Invalid Credentials";
       }
@@ -25,12 +25,47 @@ class App {
       return "Unhandled error";
     }
   }
-  //   changePassword() {}
+  changePassword(email, oldPassword, newPassword) {
+    if (!email || !oldPassword || !newPassword) {
+      return "Please Provide Credentials";
+    }
+    const user = this.users.find((u) => u.email === email);
+    if (!user) {
+      return "Invalid Credentials";
+    }
+    if (email && oldPassword && newPassword && user) {
+      if (user.privetInfo !== oldPassword) {
+        return "Invalid Credentials";
+      } else {
+        return user.change(newPassword);
+      }
+    } else {
+      return "Unhandled Error";
+    }
+  }
   //   forgetPassword() {}
 
-  //   addProducts() {}
+  userInfo(email, password) {
+    if (!email || !password) {
+      return "Provide Credentials";
+    }
+    const user = this.users.find((u) => u.email === email);
+    if (!user) {
+      return "Invalid Credentials";
+    }
+    if (user && email && password) {
+      if (user.privetInfo !== password) {
+        return "Invalid Credentials";
+      } else {
+        return {
+          name: user.name,
+          email: user.email,
+          password: user.privetInfo,
+        };
+      }
+    }
+  }
 
-  //   removeProduct() {}
 }
 
 class User {
@@ -42,6 +77,13 @@ class User {
   }
   get privetInfo() {
     return this.#password;
+  }
+  change(value) {
+    if (!value) {
+      return "Enter new password";
+    }
+    this.#password = value;
+    return `${this.name}'s password changed`;
   }
 }
 
@@ -58,4 +100,8 @@ app1.register(u3);
 // console.log(app1);
 // console.log(app1.users[1].privetInfo);
 
-console.log(app1.login("akash@gmail.com", 1234));
+// console.log(app1.login("akash@gmail.com", 1234));
+
+console.log(app1.changePassword("akash@gmail.com", 1234, 123));
+console.log(app1.login("akash@gmail.com", 123));
+console.log(app1.userInfo("akash@gmail.com", 123));
