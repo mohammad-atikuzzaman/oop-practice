@@ -1,0 +1,218 @@
+🧠 Day 10 – Dependency Injection (DI) & Loose Coupling: The Heart of Scalable OOP Design
+🏗️ প্রথমে বুঝে নিই – “Dependency” মানে আসলে কী?
+
+প্রত্যেকটা class তার কাজ করার জন্য অনেক সময় অন্য class-এর উপর নির্ভর করে।
+এই নির্ভরশীলতাকেই বলে dependency।
+
+উদাহরণ:
+
+class EmailService {
+  sendEmail(message) {
+    console.log("Email sent:", message);
+  }
+}
+
+class UserService {
+  constructor() {
+    this.emailService = new EmailService(); // dependency
+  }
+
+  registerUser(name) {
+    console.log(`${name} registered successfully.`);
+    this.emailService.sendEmail("Welcome!");
+  }
+}
+
+
+এখানে UserService ক্লাসটা EmailService-এর উপর নির্ভরশীল।
+তাহলে EmailService হচ্ছে একটা dependency।
+
+🚨 সমস্যা কোথায়?
+
+এই কোডে একটা বড় সমস্যা আছে –
+UserService নিজেই EmailService তৈরি করছে (new EmailService()).
+
+এর ফলে:
+
+🔗 দুইটা class tight coupling হয়ে গেছে।
+
+🚫 যদি Email বাদ দিয়ে SMS পাঠাতে চাও, তাহলে পুরো class বদলাতে হবে।
+
+❌ Test করাও কঠিন, কারণ dependency বদলানো যাবে না।
+
+💡 সমাধান: Dependency Injection (DI)
+
+“Dependency Injection” মানে —
+class-এর ভেতর dependency তৈরি না করে, বাইর থেকে inject করা।
+
+মানে dependency কে constructor, parameter, বা setter method দিয়ে পাঠিয়ে দেওয়া হয়।
+
+🧩 Example: Proper Dependency Injection
+class EmailService {
+  send(message) {
+    console.log("Email:", message);
+  }
+}
+
+class SMSService {
+  send(message) {
+    console.log("SMS:", message);
+  }
+}
+
+class UserService {
+  constructor(notificationService) {
+    this.notificationService = notificationService; // Injected dependency
+  }
+
+  registerUser(name) {
+    console.log(`${name} registered successfully.`);
+    this.notificationService.send("Welcome to our app!");
+  }
+}
+
+// Inject dependency dynamically
+const emailService = new EmailService();
+const smsService = new SMSService();
+
+const user1 = new UserService(emailService);
+user1.registerUser("Atik");
+
+const user2 = new UserService(smsService);
+user2.registerUser("Rahim");
+
+✅ এখানে যা হলো:
+
+UserService নিজে dependency তৈরি করছে না।
+
+Dependency constructor দিয়ে বাইরে থেকে পাঠানো হয়েছে।
+
+এখন তুমি যেকোনো service inject করতে পারো (Email, SMS, Push, ইত্যাদি)।
+
+ক্লাসগুলো একে অপরের থেকে independent (loosely coupled)।
+
+🧱 Loose Coupling মানে কী?
+
+Tight Coupling:
+একটা class যদি অন্য class-এর implementation directly ব্যবহার করে।
+
+Loose Coupling:
+একটা class অন্য class-এর behavior এর উপর নির্ভর করে, implementation এর উপর নয়।
+
+👉 Real-world analogy:
+
+ধরো তুমি রেস্টুরেন্টে গেছো।
+তুমি waiter কে বলো “এক গ্লাস পানি দাও।”
+তুমি বলো না, “ফিল্টার থেকে পানি ঢেলে গ্লাসে দাও।”
+
+তুমি behavior চাও (পানি পাওয়া), implementation না (কীভাবে আনা হবে)।
+এটাই loose coupling! 😄
+
+🧠 কেন Dependency Injection দরকার?
+
+Scalability: নতুন service যোগ করলেও পুরোনো কোডে হাত দিতে হয় না।
+
+Testability: সহজে mock dependency তৈরি করে test করা যায়।
+
+Flexibility: এক dependency বাদ দিয়ে আরেকটা ব্যবহার করা যায়।
+
+Maintenance: কোড পরিষ্কার, সহজ, এবং ভবিষ্যতে update-friendly হয়।
+
+⚙️ Dependency Injection-এর 3 ধরণ
+
+Constructor Injection → সবচেয়ে সাধারণ
+
+constructor(service) { this.service = service; }
+
+
+Setter Injection → পরে dependency set করা হয়
+
+setService(service) { this.service = service; }
+
+
+Method Injection → মেথডের parameter হিসেবে dependency পাঠানো হয়
+
+processOrder(service) { service.send("Order complete"); }
+
+⚠️ ভুলগুলো যেগুলো করা যাবে না
+
+❌ Dependency ভিতরে তৈরি করা (new EmailService() ইত্যাদি)।
+❌ একই class এ অনেক dependency inject করা (SRP ভাঙে)।
+❌ Interface বা abstraction ছাড়া direct dependency inject করা।
+❌ Dependency validate না করে ব্যবহার করা।
+
+✅ Best Practices
+
+🧩 সবসময় abstraction/interface এর উপর dependency রাখো, implementation এর উপর না।
+
+💬 Class design এমন করো যাতে dependency বদলানো যায় কিন্তু class logic অপরিবর্তিত থাকে।
+
+🧪 Unit test করার সময় dependency mock করো।
+
+🧱 Dependency যত কম, code তত maintainable।
+
+🧠 Real-life Example: Notification System
+
+(Practice করার সময় এটাকে follow করবে 👇)
+
+// Interface-like structure
+class NotificationService {
+  send(message) {
+    throw new Error("Method 'send()' must be implemented");
+  }
+}
+
+class EmailService extends NotificationService {
+  send(message) {
+    console.log("📧 Email Sent:", message);
+  }
+}
+
+class SMSService extends NotificationService {
+  send(message) {
+    console.log("📱 SMS Sent:", message);
+  }
+}
+
+class PushService extends NotificationService {
+  send(message) {
+    console.log("🔔 Push Notification:", message);
+  }
+}
+
+class UserNotification {
+  constructor(service) {
+    this.service = service; // Dependency injected
+  }
+
+  notifyUser(name) {
+    this.service.send(`Welcome ${name}!`);
+  }
+}
+
+// Inject dynamically
+const email = new EmailService();
+const sms = new SMSService();
+const push = new PushService();
+
+new UserNotification(email).notifyUser("Atik");
+new UserNotification(sms).notifyUser("Rahim");
+new UserNotification(push).notifyUser("Sakib");
+
+🧩 Homework (Day 10)
+
+👉 তোমাকে একটা Payment Gateway System বানাতে হবে।
+
+Requirements:
+
+একটা base PaymentService class বানাও (যাতে একটা pay(amount) মেথড থাকবে)।
+
+তিনটা service বানাও — BkashService, NagadService, StripeService।
+
+একটা PaymentProcessor class বানাও যেটা constructor দিয়ে dependency নেবে।
+
+প্রত্যেকটা service আলাদাভাবে inject করে payment complete করবে।
+
+Bonus:
+নতুন PayPalService যোগ করো — কিন্তু পুরোনো কোডে কোনো লাইন বদলাবে না 😎
+(এটাই prove করবে তুমি loosely coupled DI সিস্টেম বানিয়েছো।)
